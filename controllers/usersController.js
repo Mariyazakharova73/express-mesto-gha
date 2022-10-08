@@ -42,7 +42,8 @@ module.exports.updateAvatar = (req, res) => {
     req.user._id,
     { avatar: req.body.avatar },
     {
-      new: true, // обработчик then получит на вход обновлённую запись
+      new: true,
+      runValidators: true, // обработчик then получит на вход обновлённую запись
     }
   )
     .then((user) => res.send({ data: user }))
