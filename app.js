@@ -1,10 +1,10 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
-// const path = require('path');
 const cors = require("cors");
 const usersRouter = require("./routes/usersRouter");
 const cardsRouter = require("./routes/cardsRouter");
+const { NO_DATA_ERROR } = require("./constants");
 
 const { PORT = 3000 } = process.env;
 
@@ -25,7 +25,7 @@ app.use((req, res, next) => {
 app.use(usersRouter);
 app.use(cardsRouter);
 app.use("*", (req, res) => {
-  res.status(404).send({ message: "Неправильный URL или метод" });
+  res.status(NO_DATA_ERROR).send({ message: "Неправильный URL или метод" });
 });
 
 mongoose.connect("mongodb://localhost:27017/mestodb");
