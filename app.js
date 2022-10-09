@@ -4,7 +4,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const usersRouter = require("./routes/usersRouter");
 const cardsRouter = require("./routes/cardsRouter");
-const { NO_DATA_ERROR } = require("./constants");
+const { NO_DATA_ERROR } = require("./utils/constants");
 
 const { PORT = 3000 } = process.env;
 
