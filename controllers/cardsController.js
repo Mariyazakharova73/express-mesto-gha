@@ -1,5 +1,6 @@
 const Card = require("../models/cardModel");
 const { handleErrors, handleIdErrors } = require("../utils/handleErrors");
+const { INCORRECT_DATA_ERROR, DEFAULT_ERROR } = require("../utils/constants");
 
 module.exports.getCards = (req, res) => {
   Card.find({})
@@ -21,11 +22,13 @@ module.exports.deleteCard = (req, res) => {
     Card.findByIdAndRemove(req.params.cardId)
       .then((card) => handleIdErrors(card, res))
       .catch((err) => {
-        res.status(500).send({ message: "На сервере произошла ошибка" });
+        res
+          .status(DEFAULT_ERROR)
+          .send({ message: "На сервере произошла ошибка" });
       });
-      return
+    return;
   }
-  res.status(400).send({ message: "Неправильный id" });
+  res.status(INCORRECT_DATA_ERROR).send({ message: "Неправильный id" });
 };
 
 module.exports.likeCard = (req, res) => {
@@ -37,11 +40,13 @@ module.exports.likeCard = (req, res) => {
     )
       .then((card) => handleIdErrors(card, res))
       .catch((err) => {
-        res.status(500).send({ message: "На сервере произошла ошибка" });
+        res
+          .status(DEFAULT_ERROR)
+          .send({ message: "На сервере произошла ошибка" });
       });
-      return
+    return;
   }
-  res.status(400).send({ message: "Неправильный id" });
+  res.status(INCORRECT_DATA_ERROR).send({ message: "Неправильный id" });
 };
 
 module.exports.dislikeCard = (req, res) => {
@@ -53,9 +58,11 @@ module.exports.dislikeCard = (req, res) => {
     )
       .then((card) => handleIdErrors(card, res))
       .catch((err) => {
-        res.status(500).send({ message: "На сервере произошла ошибка" });
+        res
+          .status(DEFAULT_ERROR)
+          .send({ message: "На сервере произошла ошибка" });
       });
-      return
+    return;
   }
-  res.status(400).send({ message: "Неправильный id" });
+  res.status(INCORRECT_DATA_ERROR).send({ message: "Неправильный id" });
 };

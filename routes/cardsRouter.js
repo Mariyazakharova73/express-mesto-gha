@@ -4,7 +4,7 @@ const {
   getCards,
   deleteCard,
   likeCard,
-  dislikeCard
+  dislikeCard,
 } = require("../controllers/cardsController"); // данные нужны для роутинга, поэтому импортируем их
 
 router.get("/cards", getCards); //возвращает все карточки

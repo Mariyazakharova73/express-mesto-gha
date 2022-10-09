@@ -1,5 +1,6 @@
 const User = require("../models/userModel");
-const { handleErrors, checkId, handleIdErrors } = require("../utils/handleErrors");
+const { handleErrors, handleIdErrors } = require("../utils/handleErrors");
+const { DEFAULT_ERROR } = require("../utils/constants");
 
 module.exports.getUsers = (req, res) => {
   User.find({})
@@ -20,11 +21,13 @@ module.exports.getUser = (req, res) => {
   if (req.params.userId.match(/^[0-9a-fA-F]{24}$/)) {
     User.findById(req.params.userId)
       .then((user) => {
-        handleIdErrors(user, res)
+        handleIdErrors(user, res);
       })
       .catch((err) => {
-        console.log(err.name)
-        res.status(500).send({ message: "На сервере произошла ошибка" });
+        console.log(err.name);
+        res
+          .status(DEFAULT_ERROR)
+          .send({ message: "На сервере произошла ошибка" });
       });
     return;
   }
