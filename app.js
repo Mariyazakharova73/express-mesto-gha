@@ -14,16 +14,6 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get("/", (req, res) => {
-  res.send(
-    `<html>
-        <body>
-            <p>Сервер работай!!!!!!!</p>
-        </body>
-        </html>`
-  );
-});
-
 app.use((req, res, next) => {
   req.user = {
     _id: "63413dba37e337ac09f8f2e4", // вставьте сюда _id созданного в предыдущем пункте пользователя
@@ -34,6 +24,9 @@ app.use((req, res, next) => {
 
 app.use(usersRouter);
 app.use(cardsRouter);
+app.use('*', (req, res) => {
+  res.status(404).send({ message: 'Неправильный URL или метод' });
+});
 
 mongoose.connect("mongodb://localhost:27017/mestodb");
 
