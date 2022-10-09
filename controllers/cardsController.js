@@ -1,5 +1,5 @@
 const Card = require("../models/cardModel");
-const { handleErrors } = require("../controllers/handleErrors");
+const { handleErrors } = require("../utils/handleErrors");
 
 module.exports.getCards = (req, res) => {
   console.log("получаем карточи");
