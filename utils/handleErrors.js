@@ -9,10 +9,6 @@ module.exports.handleErrors = (err, res) => {
 };
 
 module.exports.checkId = (id) => {
-  if (id.match(/^[0-9a-fA-F]{24}$/)) {
-    res.status(404).send({ message: "Объект не найден" });
-    return;
-  }
   return id.match(/^[0-9a-fA-F]{24}$/);
 };
 
