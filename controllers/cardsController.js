@@ -23,6 +23,7 @@ module.exports.deleteCard = (req, res) => {
       .catch((err) => {
         res.status(500).send({ message: "На сервере произошла ошибка" });
       });
+      return
   }
   res.status(400).send({ message: "Неправильный id" });
 };
@@ -38,6 +39,7 @@ module.exports.likeCard = (req, res) => {
       .catch((err) => {
         res.status(500).send({ message: "На сервере произошла ошибка" });
       });
+      return
   }
   res.status(400).send({ message: "Неправильный id" });
 };
@@ -53,6 +55,7 @@ module.exports.dislikeCard = (req, res) => {
       .catch((err) => {
         res.status(500).send({ message: "На сервере произошла ошибка" });
       });
+      return
   }
   res.status(400).send({ message: "Неправильный id" });
 };
