@@ -1,5 +1,5 @@
 const Card = require("../models/cardModel");
-const { handleErrors } = require("../utils/handleErrors");
+const { handleErrors, handleIdErrors } = require("../utils/handleErrors");
 
 module.exports.getCards = (req, res) => {
   Card.find({})
@@ -19,7 +19,7 @@ module.exports.createCard = (req, res) => {
 module.exports.deleteCard = (req, res) => {
   if (req.params.cardId.match(/^[0-9a-fA-F]{24}$/)) {
     Card.findByIdAndRemove(req.params.cardId)
-      .then((card) => res.send({ data: card }))
+      .then((card) => handleIdErrors(card, res))
       .catch((err) => {
         res.status(500).send({ message: "На сервере произошла ошибка" });
       });
@@ -34,7 +34,7 @@ module.exports.likeCard = (req, res) => {
       { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
       { new: true }
     )
-      .then((card) => res.send({ data: card }))
+      .then((card) => handleIdErrors(card, res))
       .catch((err) => {
         res.status(500).send({ message: "На сервере произошла ошибка" });
       });
@@ -49,7 +49,7 @@ module.exports.dislikeCard = (req, res) => {
       { $pull: { likes: req.user._id } }, // убрать _id из массива
       { new: true }
     )
-      .then((card) => res.send({ data: card }))
+      .then((card) => handleIdErrors(card, res))
       .catch((err) => {
         res.status(500).send({ message: "На сервере произошла ошибка" });
       });

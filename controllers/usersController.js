@@ -20,9 +20,10 @@ module.exports.getUser = (req, res) => {
   if (req.params.userId.match(/^[0-9a-fA-F]{24}$/)) {
     User.findById(req.params.userId)
       .then((user) => {
-        handleIdErrors(user)
+        handleIdErrors(user, res)
       })
       .catch((err) => {
+        console.log(err.name)
         res.status(500).send({ message: "На сервере произошла ошибка" });
       });
     return;

@@ -12,7 +12,7 @@ module.exports.checkId = (id) => {
   return id.match(/^[0-9a-fA-F]{24}$/);
 };
 
-module.exports.handleIdErrors = (obj) => {
+module.exports.handleIdErrors = (obj, res) => {
   if (!obj) {
     res.status(404).send({ message: "Объект не найден" });
     return;
