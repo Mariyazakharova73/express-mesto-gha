@@ -2,6 +2,12 @@
 
 # Проект Mesto фронтенд + бэкенд
 
+## Технологии и инструменты
+
+* Express
+* MongoDB
+* Node.js
+
 ## Директории
 
 `/routes` — папка с файлами роутера  
@@ -11,4 +17,5 @@
 ## Запуск проекта
 
 `npm run start` — запускает сервер   
-`npm run dev` — запускает сервер с hot-reload
+`npm run dev` — запускает сервер с hot-reload  
+`npm run lint` — запускает eslint
