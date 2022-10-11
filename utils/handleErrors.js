@@ -5,19 +5,15 @@ const {
 } = require("./constants");
 
 module.exports.handleErrors = (err, res) => {
-  if (err.name == "CastError") {
-    return res.status(NO_DATA_ERROR).send({ message: "Объект не найден" });
+  if (err.name === "CastError") {
+    return res.status(INCORRECT_DATA_ERROR).send({ message: "Объект не найден", err });
   }
-  if (err.name == "ValidationError") {
+  if (err.name === "ValidationError") {
     return res
       .status(INCORRECT_DATA_ERROR)
-      .send({ message: "Переданы некорректные данные" });
+      .send({ message: "Переданы некорректные данные", err });
   }
-  res.status(DEFAULT_ERROR).send({ message: "На сервере произошла ошибка" });
-};
-
-module.exports.checkId = (id) => {
-  return id.match(/^[0-9a-fA-F]{24}$/);
+  return res.status(DEFAULT_ERROR).send({ message: "На сервере произошла ошибка", err });
 };
 
 module.exports.handleIdErrors = (obj, res) => {

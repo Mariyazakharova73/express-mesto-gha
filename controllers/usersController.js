@@ -1,6 +1,5 @@
 const User = require("../models/userModel");
 const { handleErrors, handleIdErrors } = require("../utils/handleErrors");
-const { DEFAULT_ERROR } = require("../utils/constants");
 
 module.exports.getUsers = (req, res) => {
   User.find({})
@@ -18,20 +17,13 @@ module.exports.createUser = (req, res) => {
 };
 
 module.exports.getUser = (req, res) => {
-  if (req.params.userId.match(/^[0-9a-fA-F]{24}$/)) {
-    User.findById(req.params.userId)
-      .then((user) => {
-        handleIdErrors(user, res);
-      })
-      .catch((err) => {
-        console.log(err.name);
-        res
-          .status(DEFAULT_ERROR)
-          .send({ message: "На сервере произошла ошибка" });
-      });
-    return;
-  }
-  res.status(400).send({ message: "Неправильный id" });
+  User.findById(req.params.userId)
+    .then((user) => {
+      handleIdErrors(user, res);
+    })
+    .catch((err) => {
+      handleErrors(err, res);
+    });
 };
 
 module.exports.updateProfile = (req, res) => {
@@ -44,13 +36,10 @@ module.exports.updateProfile = (req, res) => {
 };
 
 module.exports.updateAvatar = (req, res) => {
-  console.log(typeof req.body.avatar);
   User.findByIdAndUpdate(
     req.user._id,
     { avatar: req.body.avatar },
-    {
-      new: true,
-    }
+    { new: true, runValidators: true },
   )
     .then((user) => res.send({ data: user }))
     .catch((err) => handleErrors(err, res));

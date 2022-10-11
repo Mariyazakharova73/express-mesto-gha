@@ -1,6 +1,5 @@
 const Card = require("../models/cardModel");
 const { handleErrors, handleIdErrors } = require("../utils/handleErrors");
-const { INCORRECT_DATA_ERROR, DEFAULT_ERROR } = require("../utils/constants");
 
 module.exports.getCards = (req, res) => {
   Card.find({})
@@ -18,51 +17,33 @@ module.exports.createCard = (req, res) => {
 };
 
 module.exports.deleteCard = (req, res) => {
-  if (req.params.cardId.match(/^[0-9a-fA-F]{24}$/)) {
-    Card.findByIdAndRemove(req.params.cardId)
-      .then((card) => handleIdErrors(card, res))
-      .catch((err) => {
-        res
-          .status(DEFAULT_ERROR)
-          .send({ message: "На сервере произошла ошибка" });
-      });
-    return;
-  }
-  res.status(INCORRECT_DATA_ERROR).send({ message: "Неправильный id" });
+  Card.findByIdAndRemove(req.params.cardId)
+    .then((card) => handleIdErrors(card, res))
+    .catch((err) => {
+      handleErrors(err, res);
+    });
 };
 
 module.exports.likeCard = (req, res) => {
-  if (req.params.cardId.match(/^[0-9a-fA-F]{24}$/)) {
-    Card.findByIdAndUpdate(
-      req.params.cardId,
-      { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
-      { new: true }
-    )
-      .then((card) => handleIdErrors(card, res))
-      .catch((err) => {
-        res
-          .status(DEFAULT_ERROR)
-          .send({ message: "На сервере произошла ошибка" });
-      });
-    return;
-  }
-  res.status(INCORRECT_DATA_ERROR).send({ message: "Неправильный id" });
+  Card.findByIdAndUpdate(
+    req.params.cardId,
+    { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
+    { new: true },
+  )
+    .then((card) => handleIdErrors(card, res))
+    .catch((err) => {
+      handleErrors(err, res);
+    });
 };
 
 module.exports.dislikeCard = (req, res) => {
-  if (req.params.cardId.match(/^[0-9a-fA-F]{24}$/)) {
-    Card.findByIdAndUpdate(
-      req.params.cardId,
-      { $pull: { likes: req.user._id } }, // убрать _id из массива
-      { new: true }
-    )
-      .then((card) => handleIdErrors(card, res))
-      .catch((err) => {
-        res
-          .status(DEFAULT_ERROR)
-          .send({ message: "На сервере произошла ошибка" });
-      });
-    return;
-  }
-  res.status(INCORRECT_DATA_ERROR).send({ message: "Неправильный id" });
+  Card.findByIdAndUpdate(
+    req.params.cardId,
+    { $pull: { likes: req.user._id } }, // убрать _id из массива
+    { new: true },
+  )
+    .then((card) => handleIdErrors(card, res))
+    .catch((err) => {
+      handleErrors(err, res);
+    });
 };
