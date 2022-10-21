@@ -6,6 +6,8 @@ const usersRouter = require("./routes/usersRouter");
 const cardsRouter = require("./routes/cardsRouter");
 const { createUser, login } = require("./controllers/usersController");
 const auth = require("./middlewares/auth");
+const { errors } = require('celebrate');
+
 // const validator = require("validator");
 const { NO_DATA_ERROR } = require("./utils/constants");
 
@@ -30,6 +32,8 @@ app.use("*", (req, res) => {
 });
 
 mongoose.connect("mongodb://localhost:27017/mestodb");
+
+app.use(errors()); // обработчик ошибок celebrate
 
 app.use((err, req, res, next) => {
   // если у ошибки нет статуса, выставляем 500

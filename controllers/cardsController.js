@@ -1,20 +1,23 @@
 const Card = require("../models/cardModel");
-const { handleErrors } = require("../utils/handleErrors");
 const NotFoundError = require("../errors/not-found-err");
+const IncorrectDataError = require("../errors/incorrect-data-err");
 
-module.exports.getCards = (req, res) => {
+module.exports.getCards = (req, res, next) => {
   Card.find({})
     .populate("owner")
     .then((cards) => res.send(cards))
-    .catch((err) => handleErrors(err, res));
+    .catch(next);
 };
 
-module.exports.createCard = (req, res) => {
+module.exports.createCard = (req, res, next) => {
   const creatorId = req.user._id;
   const { name, link } = req.body;
   Card.create({ name, link, owner: creatorId })
-    .then((card) => res.send({ data: card }))
-    .catch((err) => handleErrors(err, res));
+    .then((card) => res.send(card))
+    .catch((e) => {
+      const err = new IncorrectDataError("Переданы некорректные данные при создании карточки");
+      next(err);
+    });
 };
 
 module.exports.deleteCard = (req, res, next) => {
@@ -41,7 +44,10 @@ module.exports.likeCard = (req, res, next) => {
       }
       res.send(card);
     })
-    .catch(next);
+    .catch((e) => {
+      const err = new IncorrectDataError("Переданы некорректные данные для постановки лайка");
+      next(err);
+    });
     // .catch((err) => {
     //   handleErrors(err, res);
     // });
@@ -59,7 +65,10 @@ module.exports.dislikeCard = (req, res, next) => {
       }
       res.send(card);
     })
-    .catch(next);
+    .catch((e) => {
+      const err = new IncorrectDataError("Переданы некорректные данные для снятия лайка");
+      next(err);
+    });
     // .catch((err) => {
     //   handleErrors(err, res);
     // });
