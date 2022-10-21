@@ -1,5 +1,6 @@
 const Card = require("../models/cardModel");
-const { handleErrors, handleIdErrors } = require("../utils/handleErrors");
+const { handleErrors } = require("../utils/handleErrors");
+const NotFoundError = require("../errors/not-found-err");
 
 module.exports.getCards = (req, res) => {
   Card.find({})
@@ -16,34 +17,50 @@ module.exports.createCard = (req, res) => {
     .catch((err) => handleErrors(err, res));
 };
 
-module.exports.deleteCard = (req, res) => {
+module.exports.deleteCard = (req, res, next) => {
   Card.findOneAndRemove({ _id: req.params.cardId, owner: req.user })
-    .then((card) => handleIdErrors(card, res))
-    .catch((err) => {
-      handleErrors(err, res);
-    });
+    .then((card) => {
+      if (!card) {
+        throw new NotFoundError("Нет карточки с таким id");
+      }
+      res.send(card);
+    })
+    .catch(next);
+    // .catch((err) => handleErrors(err, res));
 };
 
-module.exports.likeCard = (req, res) => {
+module.exports.likeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
-    { new: true }
+    { new: true },
   )
-    .then((card) => handleIdErrors(card, res))
-    .catch((err) => {
-      handleErrors(err, res);
-    });
+    .then((card) => {
+      if (!card) {
+        throw new NotFoundError("Нет карточки с таким id");
+      }
+      res.send(card);
+    })
+    .catch(next);
+    // .catch((err) => {
+    //   handleErrors(err, res);
+    // });
 };
 
-module.exports.dislikeCard = (req, res) => {
+module.exports.dislikeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $pull: { likes: req.user._id } }, // убрать _id из массива
-    { new: true }
+    { new: true },
   )
-    .then((card) => handleIdErrors(card, res))
-    .catch((err) => {
-      handleErrors(err, res);
-    });
+    .then((card) => {
+      if (!card) {
+        throw new NotFoundError("Нет карточки с таким id");
+      }
+      res.send(card);
+    })
+    .catch(next);
+    // .catch((err) => {
+    //   handleErrors(err, res);
+    // });
 };

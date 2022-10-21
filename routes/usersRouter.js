@@ -5,7 +5,7 @@ const {
   updateProfile,
   updateAvatar,
   getUser,
-  getUserMe
+  getUserMe,
 } = require("../controllers/usersController"); // данные нужны для роутинга, поэтому импортируем их
 
 router.get("/users", getUsers); // возвращает всех пользователей

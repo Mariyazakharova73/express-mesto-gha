@@ -1,7 +1,8 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
-const { handleErrors, handleIdErrors } = require("../utils/handleErrors");
+const { handleErrors } = require("../utils/handleErrors");
+const NotFoundError = require("../errors/not-found-err");
 
 module.exports.login = (req, res) => {
   const { email, password } = req.body;
@@ -40,24 +41,32 @@ module.exports.createUser = (req, res) => {
     });
 };
 
-module.exports.getUser = (req, res) => {
+module.exports.getUser = (req, res, next) => {
   User.findById(req.params.userId)
     .then((user) => {
-      handleIdErrors(user, res);
+      if (!user) {
+        throw new NotFoundError("Нет пользователя с таким id");
+      }
+      res.send(user);
     })
-    .catch((err) => {
-      handleErrors(err, res);
-    });
+    .catch(next);
+    // .catch((err) => {
+    //   handleErrors(err, res);
+    // });
 };
 
-module.exports.getUserMe = (req, res) => {
+module.exports.getUserMe = (req, res, next) => {
   User.findById(req.user._id)
     .then((user) => {
-      handleIdErrors(user, res);
+      if (!user) {
+        throw new NotFoundError("Нет пользователя с таким id");
+      }
+      res.send(user);
     })
-    .catch((err) => {
-      handleErrors(err, res);
-    });
+    .catch(next);
+    // .catch((err) => {
+    //   handleErrors(err, res);
+    // });
 };
 
 module.exports.updateProfile = (req, res) => {
