@@ -4,6 +4,7 @@ const User = require("../models/userModel");
 const NotFoundError = require("../errors/not-found-err");
 const AuthorisationError = require("../errors/auth-err");
 const IncorrectDataError = require("../errors/incorrect-data-err");
+const UserExistsError = require("../errors/user-exists-err");
 
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
@@ -18,11 +19,10 @@ module.exports.login = (req, res, next) => {
       // вернём токен
       res.send({ token });
     })
-    .catch((e) => {
+    .catch((err) => {
       // ошибка аутентификации
       // res.status(401).send({ message: err.message });
-      const err = new AuthorisationError("Ошибка аутентификации");
-      next(err);
+      next(new AuthorisationError("Ошибка аутентификации"));
     });
 };
 
@@ -38,8 +38,10 @@ module.exports.createUser = (req, res, next) => {
     .hash(req.body.password, 10)
     .then((hash) => User.create({ name, about, avatar, email, password: hash }))
     .then((user) => res.send(user))
-    .catch((e) => {
-      const err = new IncorrectDataError("Переданы некорректные данные при создании пользователя");
+    .catch((err) => {
+      if (err.code === 11000) {
+        next(new UserExistsError("Такой пользователь уже существует"));
+      }
       next(err);
     });
 };
@@ -72,10 +74,7 @@ module.exports.updateProfile = (req, res, next) => {
     runValidators: true,
   })
     .then((user) => res.send(user))
-    .catch((e) => {
-      const err = new IncorrectDataError("Переданы некорректные данные при обновлении профиля");
-      next(err);
-    });
+    .catch(next);
 };
 
 module.exports.updateAvatar = (req, res, next) => {
@@ -85,8 +84,5 @@ module.exports.updateAvatar = (req, res, next) => {
     { new: true, runValidators: true }
   )
     .then((user) => res.send({ data: user }))
-    .catch((e) => {
-      const err = new IncorrectDataError("Переданы некорректные данные при обновлении аватара");
-      next(err);
-    });
+    .catch(next);
 };

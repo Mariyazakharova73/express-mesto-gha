@@ -14,10 +14,7 @@ module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
   Card.create({ name, link, owner: creatorId })
     .then((card) => res.send(card))
-    .catch((e) => {
-      const err = new IncorrectDataError("Переданы некорректные данные при создании карточки");
-      next(err);
-    });
+    .catch(next);
 };
 
 module.exports.deleteCard = (req, res, next) => {
@@ -43,10 +40,7 @@ module.exports.likeCard = (req, res, next) => {
       }
       res.send(card);
     })
-    .catch((e) => {
-      const err = new IncorrectDataError("Переданы некорректные данные для постановки лайка");
-      next(err);
-    });
+    .catch(next);
 };
 
 module.exports.dislikeCard = (req, res, next) => {
@@ -61,8 +55,5 @@ module.exports.dislikeCard = (req, res, next) => {
       }
       res.send(card);
     })
-    .catch((e) => {
-      const err = new IncorrectDataError("Переданы некорректные данные для снятия лайка");
-      next(err);
-    });
+    .catch(next);
 };
