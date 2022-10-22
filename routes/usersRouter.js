@@ -7,7 +7,9 @@ const {
   getUser,
   getUserMe,
 } = require("../controllers/usersController");
-const { validateUser, validateAvatar, validateUserId, validateUserInfo } = require("../utils/validation");
+const {
+  validateUser, validateAvatar, validateUserId, validateUserInfo,
+} = require("../utils/validation");
 
 router.get("/users", getUsers);
 router.post("/users", validateUser, createUser);

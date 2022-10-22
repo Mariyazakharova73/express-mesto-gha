@@ -18,7 +18,7 @@ module.exports.login = (req, res, next) => {
       // вернём токен
       res.send({ token });
     })
-    .catch((err) => {
+    .catch(() => {
       // ошибка аутентификации
       // res.status(401).send({ message: err.message });
       next(new AuthorisationError("Ошибка аутентификации"));
@@ -32,10 +32,14 @@ module.exports.getUsers = (req, res, next) => {
 };
 
 module.exports.createUser = (req, res, next) => {
-  const { name, about, avatar, email } = req.body;
+  const {
+    name, about, avatar, email,
+  } = req.body;
   bcrypt
     .hash(req.body.password, 10)
-    .then((hash) => User.create({ name, about, avatar, email, password: hash }))
+    .then((hash) => User.create({
+      name, about, avatar, email, password: hash,
+    }))
     .then((user) => {
       res.send({
         user: {
@@ -89,7 +93,7 @@ module.exports.updateAvatar = (req, res, next) => {
   User.findByIdAndUpdate(
     req.user._id,
     { avatar: req.body.avatar },
-    { new: true, runValidators: true }
+    { new: true, runValidators: true },
   )
     .then((user) => res.send({ data: user }))
     .catch(next);

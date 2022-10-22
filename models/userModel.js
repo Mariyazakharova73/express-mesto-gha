@@ -32,13 +32,10 @@ const userSchema = new mongoose.Schema(
       select: false,
     },
   },
-  { versionKey: false }
+  { versionKey: false },
 );
 
-// models/user.js
-
-// models/user.js
-
+// eslint-disable-next-line func-names
 userSchema.statics.findUserByCredentials = function (email, password) {
   // попытаемся найти пользователя по почте
   return this.findOne({ email }).select("+password").then((user) => {
