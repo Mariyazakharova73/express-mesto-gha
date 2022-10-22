@@ -36,7 +36,16 @@ module.exports.createUser = (req, res, next) => {
   bcrypt
     .hash(req.body.password, 10)
     .then((hash) => User.create({ name, about, avatar, email, password: hash }))
-    .then((user) => res.send(user))
+    .then((user) => {
+      res.send({
+        user: {
+          email: user.email,
+          name: user.name,
+          about: user.about,
+          avatar: user.avatar,
+        },
+      });
+    })
     .catch((err) => {
       if (err.code === 11000) {
         next(new ConflictError("Такой пользователь уже существует"));
