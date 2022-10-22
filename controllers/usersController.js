@@ -3,8 +3,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
 const NotFoundError = require("../errors/not-found-err");
 const AuthorisationError = require("../errors/auth-err");
-const IncorrectDataError = require("../errors/incorrect-data-err");
-const UserExistsError = require("../errors/user-exists-err");
+const ConflictError = require("../errors/conflict-err");
 
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
@@ -40,7 +39,7 @@ module.exports.createUser = (req, res, next) => {
     .then((user) => res.send(user))
     .catch((err) => {
       if (err.code === 11000) {
-        next(new UserExistsError("Такой пользователь уже существует"));
+        next(new ConflictError("Такой пользователь уже существует"));
       }
       next(err);
     });

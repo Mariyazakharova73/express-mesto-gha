@@ -10,7 +10,7 @@ const auth = require("./middlewares/auth");
 
 const { validateLogin, validateUser } = require("./utils/validation");
 
-const { NO_DATA_ERROR } = require("./utils/constants");
+const { NOT_FOUND_ERROR } = require("./utils/constants");
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -24,7 +24,7 @@ app.post("/signup", validateUser, createUser);
 app.use(auth, usersRouter);
 app.use(auth, cardsRouter);
 app.use("*", (req, res) => {
-  res.status(NO_DATA_ERROR).send({ message: "Неправильный URL или метод" });
+  res.status(NOT_FOUND_ERROR).send({ message: "Неправильный URL или метод" });
 });
 
 mongoose.connect("mongodb://localhost:27017/mestodb");

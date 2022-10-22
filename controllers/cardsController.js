@@ -1,5 +1,6 @@
 const Card = require("../models/cardModel");
 const NotFoundError = require("../errors/not-found-err");
+const ForbiddenError = require("../errors/forbidden-err");
 
 module.exports.getCards = (req, res, next) => {
   Card.find({})
@@ -17,12 +18,15 @@ module.exports.createCard = (req, res, next) => {
 };
 
 module.exports.deleteCard = (req, res, next) => {
-  Card.findOneAndRemove({ _id: req.params.cardId, owner: req.user })
+  Card.findById(req.params.cardId)
     .then((card) => {
       if (!card) {
         throw new NotFoundError("Нет карточки с таким id");
       }
-      res.send(card);
+      if (card.owner.toString() !== req.user._id) {
+        throw new ForbiddenError("Карточка другого пользователя");
+      }
+      Card.findByIdAndRemove(req.params.cardId).then(() => res.send(card));
     })
     .catch(next);
 };
@@ -31,7 +35,7 @@ module.exports.likeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
-    { new: true },
+    { new: true }
   )
     .then((card) => {
       if (!card) {
@@ -46,7 +50,7 @@ module.exports.dislikeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $pull: { likes: req.user._id } }, // убрать _id из массива
-    { new: true },
+    { new: true }
   )
     .then((card) => {
       if (!card) {
