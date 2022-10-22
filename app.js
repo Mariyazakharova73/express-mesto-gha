@@ -6,7 +6,8 @@ const usersRouter = require("./routes/usersRouter");
 const cardsRouter = require("./routes/cardsRouter");
 const { createUser, login } = require("./controllers/usersController");
 const auth = require("./middlewares/auth");
-const { errors } = require('celebrate');
+const { errors } = require("celebrate");
+const { celebrate, Joi } = require("celebrate");
 
 // const validator = require("validator");
 const { NO_DATA_ERROR } = require("./utils/constants");
@@ -22,7 +23,19 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // роуты, не требующие авторизации,
 // например, регистрация и логин
 app.post("/signin", login);
-app.post("/signup", createUser);
+app.post("/signup", celebrate({
+  body: Joi.object().keys({
+    name: Joi.string().required().min(2).max(30),
+    about: Joi.string().required().min(2).max(30),
+    avatar: Joi.string()
+      .required()
+      .pattern(
+        /(https?:\/\/)(w{3}\.)?(((\d{1,3}\.){3}\d{1,3})|((\w-?)+\.(ru|com)))(:\d{2,5})?((\/.+)+)?\/?#?/,
+      ),
+    email: Joi.string().required().email(),
+    password: Joi.string().required().min(8),
+  }),
+}), createUser);
 // авторизация
 // app.use(auth);
 app.use(auth, usersRouter);
