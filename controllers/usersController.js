@@ -78,7 +78,7 @@ module.exports.updateProfile = (req, res, next) => {
     new: true,
     runValidators: true,
   })
-    .then((user) => res.send({ data: user }))
+    .then((user) => res.send(user))
     .catch((e) => {
       const err = new IncorrectDataError("Переданы некорректные данные при обновлении профиля");
       next(err);
