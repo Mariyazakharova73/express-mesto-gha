@@ -34,7 +34,6 @@ module.exports.getUsers = (req, res, next) => {
 
 module.exports.createUser = (req, res, next) => {
   const { name, about, avatar, email } = req.body;
-  // хешируем пароль
   bcrypt
     .hash(req.body.password, 10)
     .then((hash) => User.create({ name, about, avatar, email, password: hash }))
@@ -54,9 +53,6 @@ module.exports.getUser = (req, res, next) => {
       res.send(user);
     })
     .catch(next);
-  // .catch((err) => {
-  //   handleErrors(err, res);
-  // });
 };
 
 module.exports.getUserMe = (req, res, next) => {
@@ -68,9 +64,6 @@ module.exports.getUserMe = (req, res, next) => {
       res.send(user);
     })
     .catch(next);
-  // .catch((err) => {
-  //   handleErrors(err, res);
-  // });
 };
 
 module.exports.updateProfile = (req, res, next) => {

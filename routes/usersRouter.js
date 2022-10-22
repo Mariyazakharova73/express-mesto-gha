@@ -1,5 +1,3 @@
-const { celebrate, Joi } = require("celebrate");
-
 const router = require("express").Router();
 const {
   getUsers,
@@ -9,56 +7,13 @@ const {
   getUser,
   getUserMe,
 } = require("../controllers/usersController");
+const { validateUser, validateAvatar, validateUserId } = require("../utils/validation");
 
 router.get("/users", getUsers);
-router.post(
-  "/users",
-  celebrate({
-    body: Joi.object().keys({
-      name: Joi.string().required().min(2).max(30),
-      about: Joi.string().required().min(2).max(30),
-      avatar: Joi.string()
-        .required()
-        .pattern(
-          /(https?:\/\/)(w{3}\.)?(((\d{1,3}\.){3}\d{1,3})|((\w-?)+\.(ru|com)))(:\d{2,5})?((\/.+)+)?\/?#?/,
-        ),
-      email: Joi.string().required().email(),
-      password: Joi.string().required().min(8),
-    }),
-  }),
-  createUser,
-);
+router.post("/users", validateUser, createUser);
 router.get("/users/me", getUserMe);
-router.get("/users/:userId", getUser);
-router.patch(
-  "/users/me",
-  celebrate({
-    body: Joi.object().keys({
-      name: Joi.string().required().min(2).max(30),
-      about: Joi.string().required().min(2).max(30),
-      avatar: Joi.string()
-        .required()
-        .pattern(
-          /(https?:\/\/)(w{3}\.)?(((\d{1,3}\.){3}\d{1,3})|((\w-?)+\.(ru|com)))(:\d{2,5})?((\/.+)+)?\/?#?/,
-        ),
-      email: Joi.string().required().email(),
-      password: Joi.string().required().min(8),
-    }),
-  }),
-  updateProfile,
-);
-router.patch(
-  "/users/me/avatar",
-  celebrate({
-    body: Joi.object().keys({
-      avatar: Joi.string()
-        .required()
-        .pattern(
-          /(https?:\/\/)(w{3}\.)?(((\d{1,3}\.){3}\d{1,3})|((\w-?)+\.(ru|com)))(:\d{2,5})?((\/.+)+)?\/?#?/,
-        ),
-    }),
-  }),
-  updateAvatar,
-);
+router.get("/users/:userId", validateUserId, getUser);
+router.patch("/users/me", validateUser, updateProfile);
+router.patch("/users/me/avatar", validateAvatar, updateAvatar);
 
 module.exports = router;
