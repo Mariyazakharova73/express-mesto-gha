@@ -10,6 +10,9 @@ module.exports.login = (req, res, next) => {
 
   return User.findUserByCredentials(email, password)
     .then((user) => {
+      if (!user) {
+        throw new AuthorisationError("Ошибка аутентификации");
+      }
       // аутентификация успешна! пользователь в переменной user
       // создадим токен
       const token = jwt.sign({ _id: user._id }, "some-secret-key", {
@@ -18,11 +21,7 @@ module.exports.login = (req, res, next) => {
       // вернём токен
       res.send({ token });
     })
-    .catch(() => {
-      // ошибка аутентификации
-      // res.status(401).send({ message: err.message });
-      next(new AuthorisationError("Ошибка аутентификации"));
-    });
+    .catch(next);
 };
 
 module.exports.getUsers = (req, res, next) => {
@@ -53,6 +52,7 @@ module.exports.createUser = (req, res, next) => {
     .catch((err) => {
       if (err.code === 11000) {
         next(new ConflictError("Такой пользователь уже существует"));
+        return;
       }
       next(err);
     });

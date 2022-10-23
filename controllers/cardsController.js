@@ -4,7 +4,6 @@ const ForbiddenError = require("../errors/forbidden-err");
 
 module.exports.getCards = (req, res, next) => {
   Card.find({})
-    .populate("owner")
     .then((cards) => res.send(cards))
     .catch(next);
 };
@@ -26,7 +25,7 @@ module.exports.deleteCard = (req, res, next) => {
       if (card.owner.toString() !== req.user._id) {
         throw new ForbiddenError("Карточка другого пользователя");
       }
-      Card.findByIdAndRemove(req.params.cardId).then(() => res.send(card));
+      return Card.findByIdAndRemove(req.params.cardId).then(() => res.send(card));
     })
     .catch(next);
 };
