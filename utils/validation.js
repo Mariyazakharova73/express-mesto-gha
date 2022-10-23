@@ -26,12 +26,6 @@ module.exports.validateUserInfo = celebrate({
   }),
 });
 
-module.exports.validateAvatar = celebrate({
-  body: Joi.object().keys({
-    avatar: Joi.string().required().pattern(LINK_CHECKING),
-  }),
-});
-
 module.exports.validateUserId = celebrate({
   params: Joi.object().keys({
     userId: Joi.string().required().alphanum().length(24),

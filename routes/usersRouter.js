@@ -3,12 +3,11 @@ const {
   getUsers,
   createUser,
   updateProfile,
-  updateAvatar,
   getUser,
   getUserMe,
 } = require("../controllers/usersController");
 const {
-  validateUser, validateAvatar, validateUserId, validateUserInfo,
+  validateUser, validateUserId, validateUserInfo,
 } = require("../utils/validation");
 
 router.get("/users", getUsers);

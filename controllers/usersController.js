@@ -84,13 +84,3 @@ module.exports.updateProfile = (req, res, next) => {
     .then((user) => res.send(user))
     .catch(next);
 };
-
-module.exports.updateAvatar = (req, res, next) => {
-  User.findByIdAndUpdate(
-    req.user._id,
-    { avatar: req.body.avatar },
-    { new: true, runValidators: true },
-  )
-    .then((user) => res.send({ data: user }))
-    .catch(next);
-};
