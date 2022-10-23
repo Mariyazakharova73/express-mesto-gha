@@ -1,4 +1,4 @@
-const { BAD_REQUEST_ERROR } = require("../utils/constants");
+const { BAD_REQUEST_ERROR } = require('../utils/constants');
 
 class IncorrectDataError extends Error {
   constructor(message) {
