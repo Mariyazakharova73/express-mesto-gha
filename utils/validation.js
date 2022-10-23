@@ -1,5 +1,5 @@
-const { celebrate, Joi } = require("celebrate");
-const { LINK_CHECKING } = require("./constants");
+const { celebrate, Joi } = require('celebrate');
+const { LINK_CHECKING } = require('./constants');
 
 module.exports.validateLogin = celebrate({
   body: Joi.object().keys({
@@ -22,13 +22,18 @@ module.exports.validateUserInfo = celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
     about: Joi.string().required().min(2).max(30),
+  }),
+});
+
+module.exports.validateUserAvatar = celebrate({
+  body: Joi.object().keys({
     avatar: Joi.string().required().pattern(LINK_CHECKING),
   }),
 });
 
 module.exports.validateUserId = celebrate({
   params: Joi.object().keys({
-    userId: Joi.string().required().alphanum().length(24),
+    userId: Joi.string().required().hex().length(24),
   }),
 });
 
@@ -41,6 +46,6 @@ module.exports.validateCard = celebrate({
 
 module.exports.validateCardId = celebrate({
   params: Joi.object().keys({
-    cardId: Joi.string().required().alphanum().length(24),
+    cardId: Joi.string().required().hex().length(24),
   }),
 });

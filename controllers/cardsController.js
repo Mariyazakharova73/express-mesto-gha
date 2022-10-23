@@ -1,6 +1,6 @@
-const Card = require("../models/cardModel");
-const NotFoundError = require("../errors/not-found-err");
-const ForbiddenError = require("../errors/forbidden-err");
+const Card = require('../models/cardModel');
+const NotFoundError = require('../errors/not-found-err');
+const ForbiddenError = require('../errors/forbidden-err');
 
 module.exports.getCards = (req, res, next) => {
   Card.find({})
@@ -20,10 +20,10 @@ module.exports.deleteCard = (req, res, next) => {
   Card.findById(req.params.cardId)
     .then((card) => {
       if (!card) {
-        throw new NotFoundError("Нет карточки с таким id");
+        throw new NotFoundError('Нет карточки с таким id');
       }
       if (card.owner.toString() !== req.user._id) {
-        throw new ForbiddenError("Карточка другого пользователя");
+        throw new ForbiddenError('Карточка другого пользователя');
       }
       return Card.findByIdAndRemove(req.params.cardId).then(() => res.send(card));
     })
@@ -38,7 +38,7 @@ module.exports.likeCard = (req, res, next) => {
   )
     .then((card) => {
       if (!card) {
-        throw new NotFoundError("Нет карточки с таким id");
+        throw new NotFoundError('Нет карточки с таким id');
       }
       res.send(card);
     })
@@ -53,7 +53,7 @@ module.exports.dislikeCard = (req, res, next) => {
   )
     .then((card) => {
       if (!card) {
-        throw new NotFoundError("Нет карточки с таким id");
+        throw new NotFoundError('Нет карточки с таким id');
       }
       res.send(card);
     })

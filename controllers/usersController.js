@@ -1,8 +1,8 @@
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const User = require("../models/userModel");
-const NotFoundError = require("../errors/not-found-err");
-const ConflictError = require("../errors/conflict-err");
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const User = require('../models/userModel');
+const NotFoundError = require('../errors/not-found-err');
+const ConflictError = require('../errors/conflict-err');
 
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
@@ -11,8 +11,8 @@ module.exports.login = (req, res, next) => {
     .then((user) => {
       // аутентификация успешна! пользователь в переменной user
       // создадим токен
-      const token = jwt.sign({ _id: user._id }, "some-secret-key", {
-        expiresIn: "7d",
+      const token = jwt.sign({ _id: user._id }, 'some-secret-key', {
+        expiresIn: '7d',
       });
       // вернём токен
       res.send({ token });
@@ -47,7 +47,7 @@ module.exports.createUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.code === 11000) {
-        next(new ConflictError("Такой пользователь уже существует"));
+        next(new ConflictError('Такой пользователь уже существует'));
         return;
       }
       next(err);
@@ -58,7 +58,7 @@ module.exports.getUser = (req, res, next) => {
   User.findById(req.params.userId)
     .then((user) => {
       if (!user) {
-        throw new NotFoundError("Нет пользователя с таким id");
+        throw new NotFoundError('Нет пользователя с таким id');
       }
       res.send(user);
     })
@@ -69,7 +69,7 @@ module.exports.getUserMe = (req, res, next) => {
   User.findById(req.user._id)
     .then((user) => {
       if (!user) {
-        throw new NotFoundError("Нет пользователя с таким id");
+        throw new NotFoundError('Нет пользователя с таким id');
       }
       res.send(user);
     })
