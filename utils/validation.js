@@ -14,15 +14,15 @@ module.exports.validateUser = celebrate({
     about: Joi.string().min(2).max(30),
     avatar: Joi.string().pattern(LINK_CHECKING),
     email: Joi.string().required().email(),
-    password: Joi.string().required().min(8),
+    password: Joi.string().required(),
   }),
 });
 
 module.exports.validateUserInfo = celebrate({
   body: Joi.object().keys({
-    name: Joi.string().min(2).max(30),
-    about: Joi.string().min(2).max(30),
-    avatar: Joi.string().pattern(LINK_CHECKING),
+    name: Joi.string().required().min(2).max(30),
+    about: Joi.string().required().min(2).max(30),
+    avatar: Joi.string().required().pattern(LINK_CHECKING),
   }),
 });
 
