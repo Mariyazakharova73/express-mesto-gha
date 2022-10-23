@@ -1,5 +1,6 @@
 const bcrypt = require("bcryptjs");
 const mongoose = require("mongoose");
+const AuthorisationError = require("../errors/auth-err");
 
 const userSchema = new mongoose.Schema(
   {
@@ -38,20 +39,26 @@ const userSchema = new mongoose.Schema(
 // eslint-disable-next-line func-names
 userSchema.statics.findUserByCredentials = function (email, password) {
   // попытаемся найти пользователя по почте
-  return this.findOne({ email }).select("+password").then((user) => {
-    // this — это модель User
-    // не нашёлся — отклоняем промис
-    if (!user) {
-      return Promise.reject(new Error("Неправильные почта или пароль"));
-    }
-    // нашёлся — сравниваем хеши
-    return bcrypt.compare(password, user.password).then((matched) => {
-      if (!matched) {
-        return Promise.reject(new Error("Неправильные почта или пароль"));
+  return this.findOne({ email })
+    .select("+password")
+    .then((user) => {
+      // this — это модель User
+      // не нашёлся — отклоняем промис
+      if (!user) {
+        return Promise.reject(
+          new AuthorisationError("Неправильные почта или пароль"),
+        );
       }
-      return user; // теперь user доступен
+      // нашёлся — сравниваем хеши
+      return bcrypt.compare(password, user.password).then((matched) => {
+        if (!matched) {
+          return Promise.reject(
+            new AuthorisationError("Неправильные почта или пароль"),
+          );
+        }
+        return user; // теперь user доступен
+      });
     });
-  });
 };
 
 module.exports = mongoose.model("user", userSchema);

@@ -2,7 +2,6 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
 const NotFoundError = require("../errors/not-found-err");
-const AuthorisationError = require("../errors/auth-err");
 const ConflictError = require("../errors/conflict-err");
 
 module.exports.login = (req, res, next) => {
@@ -10,9 +9,6 @@ module.exports.login = (req, res, next) => {
 
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      if (!user) {
-        throw new AuthorisationError("Ошибка аутентификации");
-      }
       // аутентификация успешна! пользователь в переменной user
       // создадим токен
       const token = jwt.sign({ _id: user._id }, "some-secret-key", {
