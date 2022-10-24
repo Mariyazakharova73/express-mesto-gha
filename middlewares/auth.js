@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken');
 const AuthorisationError = require('../errors/auth-err');
 
-// eslint-disable-next-line consistent-return
 module.exports = (req, res, next) => {
   // достаём авторизационный заголовок
   const { authorization } = req.headers;
