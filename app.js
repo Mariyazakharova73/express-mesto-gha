@@ -8,9 +8,9 @@ const cardsRouter = require('./routes/cardsRouter');
 const { createUser, login } = require('./controllers/usersController');
 const auth = require('./middlewares/auth');
 const NotFoundError = require('./errors/not-found-err');
-
 const { validateLogin, validateUser } = require('./utils/validation');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+const corsSetting = require('./middlewares/cors-setting');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -20,6 +20,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(requestLogger); // подключаем логгер запросов
+app.use(corsSetting);
 app.post('/signin', validateLogin, login);
 app.post('/signup', validateUser, createUser);
 app.use(auth, usersRouter);
